@@ -1,0 +1,15 @@
+{
+  "name": "d35e-little-helper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Quality-of-life module for D35E 3.1.0 on Foundry VTT 13.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
