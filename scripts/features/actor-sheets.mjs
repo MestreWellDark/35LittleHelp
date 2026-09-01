@@ -84,7 +84,7 @@ function actorWarnings(actor) {
 }
 
 function buildSummary(actor) {
-  const summary = createElement("section", {
+  const summary = createElement("div", {
     className: "d35elh-actor-summary",
     attributes: {
       "aria-label": t("D35ELH.Actor.Summary", "Little Helper summary")
@@ -147,7 +147,14 @@ function buildSummary(actor) {
 
   summary.append(primary);
 
-  const spellbooks = spellbookDcSummaries(actor.system);
+  const usedSpellbooks = new Set(
+    Array.from(actor.items ?? [])
+      .filter((item) => item.type === "spell")
+      .map((item) => String(item.system?.spellbook || "primary"))
+  );
+  const spellbooks = spellbookDcSummaries(actor.system)
+    .filter((book) => usedSpellbooks.has(String(book.id)));
+
   if (spellbooks.length) {
     const dcRow = createElement("div", { className: "d35elh-spellbook-row" });
     dcRow.append(createElement("span", {
@@ -201,9 +208,11 @@ export function renderActorSheet(app, html) {
   root.querySelector(".d35elh-actor-summary")?.remove();
   const form = root.matches("form") ? root : root.querySelector("form") ?? root;
   const summary = buildSummary(actor);
-  const header = form.querySelector(".sheet-header, header");
+  const header = form.querySelector(":scope > .sheet-header");
+  const navigation = form.querySelector(":scope > .sheet-navigation");
 
-  if (header) header.insertAdjacentElement("afterend", summary);
+  if (navigation) navigation.insertAdjacentElement("beforebegin", summary);
+  else if (header) header.insertAdjacentElement("afterend", summary);
   else form.prepend(summary);
 
   appRoot(app, html)?.classList.toggle(

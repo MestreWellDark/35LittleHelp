@@ -1,6 +1,6 @@
 {
   "name": "d35e-little-helper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Quality-of-life module for D35E 3.1.0 on Foundry VTT 13.",

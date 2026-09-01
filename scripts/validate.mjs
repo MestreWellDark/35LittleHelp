@@ -22,6 +22,9 @@ const manifest = readJson("module.json");
 const packageJson = readJson("package.json");
 const english = readJson("lang/en.json");
 const portuguese = readJson("lang/pt-BR.json");
+const actorSheetScript = readFileSync(resolve(root, "scripts/features/actor-sheets.mjs"), "utf8");
+const itemSheetScript = readFileSync(resolve(root, "scripts/features/item-sheets.mjs"), "utf8");
+const styleSheet = readFileSync(resolve(root, "styles/d35e-little-helper.css"), "utf8");
 
 requireValue(manifest.id === "d35e-little-helper", "module.json has an unexpected id");
 requireValue(manifest.version === packageJson.version, "module.json and package.json versions differ");
@@ -49,6 +52,19 @@ const portugueseKeys = Object.keys(portuguese).sort();
 requireValue(
   JSON.stringify(englishKeys) === JSON.stringify(portugueseKeys),
   "English and Portuguese localization keys differ"
+);
+
+requireValue(
+  !actorSheetScript.includes('createElement("section", {\n    className: "d35elh-actor-summary"'),
+  "Actor helper must not use a flex-expanding section element"
+);
+requireValue(
+  !itemSheetScript.includes('createElement("section", { className: "d35elh-item-helper" })'),
+  "Item helper must not use a flex-expanding section element"
+);
+requireValue(
+  /\.D35E\.sheet \.d35elh-actor-summary,[\s\S]*?flex:\s*0 0 auto !important;/.test(styleSheet),
+  "D35E actor helper is missing the flex layout guard"
 );
 
 for (const urlKey of ["url", "manifest", "download"]) {

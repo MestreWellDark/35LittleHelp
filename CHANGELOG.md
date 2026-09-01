@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1 — 2026-09-01
+
+- Corrige o painel que expandia e ocupava quase toda a ficha por herdar o flex do D35E.
+- Usa um bloco neutro e compacto, com contraste próprio para o tema de pergaminho.
+- Mostra CDs somente dos grimórios que realmente possuem magias.
+- Aplica a mesma proteção de layout aos resumos de itens.
+- Adiciona validações para impedir a regressão do painel expansível.
+
+
 ## 0.1.0 — 2026-09-01
 
 Primeira versão funcional para Foundry VTT 13 e D35E 3.1.0.

@@ -36,7 +36,7 @@ function property(label, value) {
 
 function buildItemHelper(item) {
   const system = item.system ?? {};
-  const helper = createElement("section", { className: "d35elh-item-helper" });
+  const helper = createElement("div", { className: "d35elh-item-helper" });
   const properties = createElement("div", { className: "d35elh-item-properties" });
 
   const range = [system.range?.value, system.range?.units].filter(valuePresent).join(" ");
@@ -80,8 +80,11 @@ export function renderItemSheet(app, html) {
   if (!helper.childElementCount) return;
 
   const form = root.matches("form") ? root : root.querySelector("form") ?? root;
-  const header = form.querySelector(".sheet-header, header");
-  if (header) header.insertAdjacentElement("afterend", helper);
+  const header = form.querySelector(":scope > .sheet-header");
+  const navigation = form.querySelector(":scope > .sheet-navigation, :scope > .sheet-tabs");
+
+  if (navigation) navigation.insertAdjacentElement("beforebegin", helper);
+  else if (header) header.insertAdjacentElement("afterend", helper);
   else form.prepend(helper);
 }
 
