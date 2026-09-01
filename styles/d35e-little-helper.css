@@ -355,3 +355,54 @@ button.d35elh-buff:focus-visible {
     transition: none;
   }
 }
+
+/* v0.1.1: protect helper rows from D35E's direct-child flex rules. */
+.D35E.sheet .d35elh-actor-summary,
+.D35E.sheet .d35elh-item-helper {
+  flex: 0 0 auto !important;
+  align-self: stretch;
+  min-height: 0 !important;
+  max-height: 7.5rem !important;
+  margin: 0.25rem 0.45rem 0.35rem;
+  padding: 0.3rem 0.45rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-color: rgb(83 58 39 / 58%);
+  background: rgb(244 237 215 / 86%);
+  color: #251b14;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 35%);
+}
+
+.D35E.sheet .d35elh-chip-row,
+.D35E.sheet .d35elh-spellbook-row,
+.D35E.sheet .d35elh-item-properties {
+  flex: 0 0 auto !important;
+  min-height: 0;
+}
+
+.D35E.sheet button.d35elh-chip {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  height: 1.65rem !important;
+  min-height: 1.65rem;
+  padding: 0.12rem 0.42rem;
+  border-color: rgb(82 51 34 / 62%);
+  background: rgb(255 252 239 / 74%);
+  color: #251b14 !important;
+  box-shadow: none;
+  font-size: 0.75rem;
+  opacity: 1;
+}
+
+.D35E.sheet button.d35elh-chip:hover,
+.D35E.sheet button.d35elh-chip:focus-visible {
+  border-color: #6f3c92;
+  background: rgb(238 224 242 / 88%);
+  color: #251b14 !important;
+}
+
+.D35E.sheet .d35elh-row-label,
+.D35E.sheet .d35elh-item-property,
+.D35E.sheet .d35elh-warnings {
+  color: #251b14;
+}
