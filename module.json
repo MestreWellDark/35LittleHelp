@@ -1,0 +1,51 @@
+{
+  "id": "d35e-little-helper",
+  "title": "D35E Little Helper",
+  "description": "Quality-of-life tools for the D35E 3.1.0 system on Foundry Virtual Tabletop 13.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "MestreWellDark",
+      "url": "https://github.com/MestreWellDark"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "D35E",
+        "type": "system",
+        "compatibility": {
+          "minimum": "3.1.0",
+          "verified": "3.1.0"
+        }
+      }
+    ]
+  },
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "styles": [
+    "styles/d35e-little-helper.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json"
+    }
+  ],
+  "url": "https://github.com/MestreWellDark/35LittleHelp",
+  "manifest": "https://github.com/MestreWellDark/35LittleHelp/releases/latest/download/module.json",
+  "download": "https://github.com/MestreWellDark/35LittleHelp/releases/latest/download/d35e-little-helper.zip",
+  "license": "LICENSE",
+  "readme": "README.md"
+}

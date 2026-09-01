@@ -1,0 +1,45 @@
+name: Validate module
+
+on:
+  push:
+    branches:
+      - main
+      - "codex/**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate manifest and translations
+        run: npm run validate
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Check JavaScript syntax
+        run: find scripts tests -type f -name '*.mjs' -print0 | xargs -0 -n1 node --check
+
+      - name: Build installation archive
+        run: |
+          mkdir -p dist
+          zip -r dist/d35e-little-helper.zip module.json scripts styles lang README.md CHANGELOG.md LICENSE
+
+      - name: Upload test package
+        uses: actions/upload-artifact@v4
+        with:
+          name: d35e-little-helper-test-package
+          path: dist/d35e-little-helper.zip
+          if-no-files-found: error
