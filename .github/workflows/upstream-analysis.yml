@@ -1,0 +1,88 @@
+name: Analyze upstream APIs
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/upstream-analysis.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Clone upstream projects
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://gitlab.com/koboldworks/pf1/little-helper.git upstream-little-helper
+          git clone --depth 1 --branch 3.1.0 https://gitlab.com/dragonshorn/D35E.git upstream-d35e
+
+      - name: Little Helper structure and integrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '\n=== LITTLE HELPER MANIFEST ===\n'
+          jq . upstream-little-helper/module.json
+          printf '\n=== LITTLE HELPER FILE TREE ===\n'
+          find upstream-little-helper \
+            -path '*/.git' -prune -o \
+            -path '*/node_modules' -prune -o \
+            -type f -print \
+            | sed 's#^upstream-little-helper/##' \
+            | sort \
+            | head -n 500
+          printf '\n=== LITTLE HELPER HOOKS / WRAPPERS / SETTINGS ===\n'
+          rg -n --no-heading \
+            'Hooks\.(on|once)|game\.settings\.(register|registerMenu|get|set)|libWrapper\.(register|ignore_conflicts)|CONFIG\.' \
+            upstream-little-helper \
+            -g '*.js' -g '*.mjs' -g '*.ts' \
+            | head -n 900 || true
+          printf '\n=== LITTLE HELPER IMPORTS / EXPORTS ===\n'
+          rg -n --no-heading \
+            '^(import|export) ' \
+            upstream-little-helper \
+            -g '*.js' -g '*.mjs' -g '*.ts' \
+            | head -n 900 || true
+          printf '\n=== LITTLE HELPER PF1 DATA/API REFERENCES ===\n'
+          rg -n --no-heading \
+            'system\.|data\.|actor\.|item\.|rollData|spellbook|skills|abilities|currency|feat|trait|buff|saving|attack' \
+            upstream-little-helper \
+            -g '*.js' -g '*.mjs' -g '*.hbs' -g '*.html' \
+            | head -n 1200 || true
+
+      - name: D35E structure and integration points
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '\n=== D35E MANIFEST ===\n'
+          jq '{id,title,version,compatibility,esmodules,scripts,styles,documentTypes}' upstream-d35e/system.json
+          printf '\n=== D35E RELEVANT FILE TREE ===\n'
+          find upstream-d35e/module upstream-d35e/templates \
+            -type f \
+            | sed 's#^upstream-d35e/##' \
+            | rg '(actor|item|chat|roll|sheet|spell|skill|config|currency|buff|feat|combat|token)' \
+            | sort \
+            | head -n 900 || true
+          printf '\n=== D35E HOOKS AND PUBLIC CONFIG ===\n'
+          rg -n --no-heading \
+            'Hooks\.(on|once|call|callAll)|CONFIG\.D35E|game\.D35E|ui\.notifications|render[A-Za-z]+Sheet|renderChatMessage|createChatMessage' \
+            upstream-d35e/module upstream-d35e/D35E.js \
+            -g '*.js' -g '*.mjs' \
+            | head -n 1400 || true
+          printf '\n=== D35E ACTOR / ITEM / ROLL CLASSES ===\n'
+          rg -n --no-heading \
+            'class (Actor|Item|ActorSheet|ItemSheet|Chat|Roll)|export class|export const|rollSkill|rollAbility|rollSaving|rollAttack|getRollData|prepareDerivedData' \
+            upstream-d35e/module \
+            -g '*.js' -g '*.mjs' \
+            | head -n 1400 || true
+          printf '\n=== D35E TEMPLATE DATA PATHS ===\n'
+          rg -n --no-heading \
+            'system\.(abilities|skills|attributes|currency|spells|spellbooks|traits|details)|item\.system|actor\.system|data\.system' \
+            upstream-d35e/templates \
+            -g '*.html' -g '*.hbs' \
+            | head -n 1600 || true
